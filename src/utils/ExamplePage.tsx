@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Highlight, { defaultProps } from 'prism-react-renderer';
 import theme from 'prism-react-renderer/themes/vsDark';
 import { Fragment, ReactNode, Suspense, useEffect, useState } from 'react';
+import type { UrlObject } from 'url';
 
 import { ErrorBoundary } from './ClientSuspense';
 import { trpc } from './trpc';
@@ -15,6 +16,8 @@ import { useClipboard } from './useClipboard';
 interface SourceFile {
   title: string;
   path: string;
+  query?: UrlObject['query'];
+  pathname?: UrlObject['pathname'];
 }
 
 function clsx(...classes: unknown[]) {
@@ -24,6 +27,8 @@ function clsx(...classes: unknown[]) {
 export interface ExampleProps {
   title: string;
   href: string;
+  pathname?: UrlObject['pathname'];
+  query?: UrlObject['query'];
   /**
    * Only render this on the client
    */
@@ -218,6 +223,10 @@ export function ExamplePage(
   ) : (
     innerContent
   );
+
+  const query =
+    props.query && typeof props.query !== 'string' ? props.query : undefined;
+
   return (
     <>
       <Head>
@@ -247,8 +256,11 @@ export function ExamplePage(
               <div></div>
               <div className="btn-group top-0">
                 <Link
-                  href={{ query: { file: undefined }, hash: 'content' }}
-                  scroll={false}
+                  href={{
+                    pathname: props.pathname,
+                    query: { ...query, file: undefined },
+                    hash: 'content',
+                  }}
                 >
                   <a
                     className={clsx('btn', !routerQuery.file && 'btn--active')}
@@ -257,28 +269,34 @@ export function ExamplePage(
                     Preview
                   </a>
                 </Link>
-                {props.files.map((file) => (
-                  <Link
-                    href={{
-                      query: {
-                        file: file.path,
-                      },
-                      hash: 'content',
-                    }}
-                    scroll={false}
-                    key={file.path}
-                  >
-                    <a
-                      className={clsx(
-                        'btn',
-                        routerQuery.file === file.path && 'btn--active',
-                      )}
+                {props.files.map((file) => {
+                  const q =
+                    file.query && typeof file.query !== 'string'
+                      ? file.query
+                      : undefined;
+
+                  return (
+                    <Link
+                      href={{
+                        pathname: file.pathname,
+                        query: { ...q, file: file.path },
+                        hash: 'content',
+                      }}
+                      scroll={false}
+                      key={file.path}
                     >
-                      <CodeIcon className="btn__icon" aria-hidden="true" />
-                      <code>{basename(file.path)}</code>
-                    </a>
-                  </Link>
-                ))}
+                      <a
+                        className={clsx(
+                          'btn',
+                          routerQuery.file === file.path && 'btn--active',
+                        )}
+                      >
+                        <CodeIcon className="btn__icon" aria-hidden="true" />
+                        <code>{basename(file.path)}</code>
+                      </a>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 

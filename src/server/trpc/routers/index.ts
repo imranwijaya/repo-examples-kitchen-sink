@@ -4,6 +4,7 @@
 import { authRouter } from 'feature/next-auth/router';
 import { reactHookFormRouter } from 'feature/react-hook-form/router';
 import ssgRouter from 'feature/ssg/router';
+import ssrRouter from 'feature/ssr/router';
 
 import { t } from '../trpc';
 import { sourceRouter } from './source';
@@ -19,6 +20,7 @@ export const appRouter = t.router({
 
   source: sourceRouter,
   ssgRouter: ssgRouter,
+  ssrRouter: ssrRouter,
   authRouter: authRouter,
   reactHookFormRouter: reactHookFormRouter,
 });
