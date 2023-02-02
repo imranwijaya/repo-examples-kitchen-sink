@@ -41,3 +41,5 @@ yarn-error.log*
 # testing
 playwright/videos
 playwright/screenshots
+
+package-lock.json

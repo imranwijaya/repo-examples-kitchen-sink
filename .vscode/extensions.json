@@ -2,6 +2,8 @@
   "recommendations": [
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "Orta.vscode-twoslash-queries"
+    "Orta.vscode-twoslash-queries",
+    "bradlc.vscode-tailwindcss",
+    "prisma.prisma"
   ]
 }

@@ -1,6 +1,7 @@
 import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
 import { unstable_getServerSession } from 'next-auth';
+import { prisma } from 'server/db';
 
 import { authOptions as nextAuthOptions } from '../../pages/api/auth/[...nextauth]';
 
@@ -30,6 +31,7 @@ export const createContext = async (
     req,
     res,
     session,
+    prisma,
   };
 };
 
